@@ -58,7 +58,7 @@ function M.render_tree(tree, buffer)
           end
         else
           file_count = file_count + 1
-          lines[#lines + 1] = " " .. indent .. "  " .. child.name
+          lines[#lines + 1] = " " .. indent .. child.name
           local line = #lines - 1
           tree_state.line_to_node[line] = child
           local key = (child.status or " "):match("[AMDRC?]")
