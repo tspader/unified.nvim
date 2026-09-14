@@ -78,7 +78,13 @@ function M.toggle_node()
     return
   end
 
-  -- Call the helper function to open the file
+  if node.is_dir then
+    state.expanded_dirs[node.path] = state.expanded_dirs[node.path] == false
+    require("unified.file_tree.render").render_tree(state.current_tree, state.buffer)
+    vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
+    return
+  end
+
   open_file_node(node)
 end
 
@@ -141,7 +147,7 @@ function M.show_help()
     "",
     "Navigation:",
     "  j/k       : Move up/down",
-    "  l         : Open file under cursor",
+    "  l/o/<CR>  : Open file / toggle directory",
     "",
     "Actions:",
     "  R         : Refresh the tree",
