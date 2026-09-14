@@ -34,20 +34,18 @@ function M.debounce(func, delay_ms)
   assert(type(func) == "function", "Debounce Error: 'func' argument must be a function.")
   assert(type(delay_ms) == "number" and delay_ms >= 0, "Debounce Error: 'delay_ms' must be a non-negative number.")
 
-  local timer = nil
+  local timer = assert((vim.uv or vim.loop).new_timer())
 
   return function(...)
     local args = { ... }
-
-    if timer then
-      vim.fn.timer_stop(timer)
-      timer = nil
-    end
-
-    timer = vim.defer_fn(function()
-      func(unpack(args))
-      timer = nil
-    end, delay_ms)
+    timer:stop()
+    timer:start(
+      delay_ms,
+      0,
+      vim.schedule_wrap(function()
+        func(unpack(args))
+      end)
+    )
   end
 end
 
